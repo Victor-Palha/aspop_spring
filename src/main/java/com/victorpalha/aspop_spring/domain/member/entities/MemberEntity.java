@@ -1,5 +1,6 @@
 package com.victorpalha.aspop_spring.domain.member.entities;
 
+import com.victorpalha.aspop_spring.domain.member.constants.MaritalStatus;
 import com.victorpalha.aspop_spring.domain.member.constants.MemberRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,23 +25,32 @@ public class MemberEntity {
     private String memberName;
     @Email()
     private String email;
-    @Length(min = 11)
     private String password = "";
+    @Length(min = 11)
     private String cpf;
     @Length(min = 6)
     private String rg;
     private LocalDate birthDate;
+    @Length(min = 1)
     private String motherName;
     private String fatherName;
+    @Length(min = 1)
     private String naturalness;
-    private String maritalStatus;
+    private MaritalStatus maritalStatus;
+    @Length(min = 1)
     private String formation;
+    @Length(min = 1)
     private String workLocation;
+    @Length(min = 1)
     private String numberRegistration;
     private LocalDate admissionDate;
+    @Length(min = 1)
     private String address;
+    @Length(min = 1)
     private String addressNumber;
+    @Length(min = 6)
     private String cep;
+    @Length(min = 9)
     private String phoneNumber;
     private MemberRole role = MemberRole.MEMBER;
     private boolean isActive = false;
