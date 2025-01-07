@@ -14,7 +14,7 @@ import java.util.Random;
  * This use case is for when an Admin Member wants to validate an account
  * @author Victor Palha
  * @version 1.0
- * @since 07/01/2024
+ * @since 07/01/2025
  */
 @Service
 public class ValidateMemberRequestUseCase {
