@@ -1,0 +1,20 @@
+services:
+  aspop_database:
+    image: mongo:latest
+    container_name: aspop_mongo_db
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: aspop
+      MONGO_INITDB_ROOT_PASSWORD: aspop
+    networks:
+      - aspop_network
+    volumes:
+      - aspop-data:/data/db
+
+networks:
+  aspop_network:
+    external: true
+volumes:
+  aspop-data:
+    driver: local
