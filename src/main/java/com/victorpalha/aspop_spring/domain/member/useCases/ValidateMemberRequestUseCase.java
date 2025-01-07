@@ -34,6 +34,7 @@ public class ValidateMemberRequestUseCase {
         String passwordHash = new BCryptPasswordEncoder().encode(randomPassword);
         MemberEntity memberEntity = memberExists.get();
         memberEntity.setPassword(passwordHash);
+        memberEntity.setActive(true);
         return memberRepository.save(memberEntity);
     }
 

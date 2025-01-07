@@ -63,6 +63,7 @@ public class ValidateMemberRequestUseCaseTest {
         assert validatedMember.getPassword() != null;
         assert validatedMember.getMemberId().equals(memberId);
         assert validatedMember.getPassword().length() > 10;
+        assert validatedMember.isActive();
     }
 
     @Test
