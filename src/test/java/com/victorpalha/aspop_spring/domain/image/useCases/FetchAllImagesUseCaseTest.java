@@ -1,8 +1,7 @@
-package com.victorpalha.aspop_spring.domain.image.useCase;
+package com.victorpalha.aspop_spring.domain.image.useCases;
 
 import com.victorpalha.aspop_spring.domain.image.entity.ImageEntity;
 import com.victorpalha.aspop_spring.domain.image.repository.ImageRepository;
-import com.victorpalha.aspop_spring.domain.image.useCases.FetchAllImagesUseCase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
