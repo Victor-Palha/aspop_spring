@@ -5,6 +5,11 @@ import com.victorpalha.aspop_spring.domain.event.entity.EventEntity;
 import com.victorpalha.aspop_spring.domain.event.repository.EventsRepository;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author Victor Palha
+ * @version 1.0
+ * @since 11/01/25
+ */
 @Service
 public class CreateEventUseCase {
     private final EventsRepository eventsRepository;

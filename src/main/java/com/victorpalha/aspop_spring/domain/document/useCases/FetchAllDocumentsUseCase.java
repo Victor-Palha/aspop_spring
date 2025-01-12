@@ -4,7 +4,11 @@ import com.victorpalha.aspop_spring.domain.document.entity.DocumentEntity;
 import com.victorpalha.aspop_spring.domain.document.repository.DocumentRepository;
 
 import java.util.List;
-
+/**
+ * @author Victor Palha
+ * @version 1.0
+ * @since 11/01/25
+ */
 public class FetchAllDocumentsUseCase {
     private final DocumentRepository documentRepository;
     public FetchAllDocumentsUseCase(DocumentRepository documentRepository) {

@@ -6,7 +6,11 @@ import com.victorpalha.aspop_spring.domain.event.repository.EventsRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
+/**
+ * @author Victor Palha
+ * @version 1.0
+ * @since 11/01/25
+ */
 @Service
 public class GetEventByIdUseCase {
     private final EventsRepository eventsRepository;

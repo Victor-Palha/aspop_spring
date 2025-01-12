@@ -4,7 +4,11 @@ import com.victorpalha.aspop_spring.domain.document.dtos.CreateDocumentRequestDT
 import com.victorpalha.aspop_spring.domain.document.entity.DocumentEntity;
 import com.victorpalha.aspop_spring.domain.document.repository.DocumentRepository;
 import org.springframework.stereotype.Service;
-
+/**
+ * @author Victor Palha
+ * @version 1.0
+ * @since 11/01/25
+ */
 @Service
 public class CreateDocumentUseCase {
     private final DocumentRepository documentRepository;
