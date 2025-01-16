@@ -1,6 +1,7 @@
 package com.victorpalha.aspop_spring.domain.document.useCases;
 
 import com.victorpalha.aspop_spring.domain.document.entity.DocumentEntity;
+import com.victorpalha.aspop_spring.domain.document.exceptions.DocumentIsPrivateOnlyToMembersError;
 import com.victorpalha.aspop_spring.domain.document.exceptions.DocumentNotFoundError;
 import com.victorpalha.aspop_spring.domain.document.repository.DocumentRepository;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,15 @@ public class GetDocumentByIdUseCase {
         this.documentRepository = documentRepository;
     }
 
-    private DocumentEntity execute(String documentId) {
+    public DocumentEntity execute(String documentId, boolean auth) {
         Optional<DocumentEntity> document = documentRepository.findById(documentId);
         if (document.isEmpty()) {
             throw new DocumentNotFoundError();
+        }
+        if (document.get().isPrivate()) {
+            if (!auth) {
+                throw new DocumentIsPrivateOnlyToMembersError();
+            }
         }
         return document.get();
     }
