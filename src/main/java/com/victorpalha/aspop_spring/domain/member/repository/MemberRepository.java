@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface MemberRepository extends MongoRepository<MemberEntity, String> {
     Optional<MemberEntity> findByEmailOrCpfOrRg(String email, String cpf, String rg);
+    Optional<MemberEntity> findByCpf(String cpf);
 }
