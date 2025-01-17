@@ -18,23 +18,23 @@ public class CreateEventRequestDTO {
     private String description;
     @URL
     private String eventUrl;
-    private LocalDateTime startInscription;
-    private LocalDateTime endInscription;
-    private LocalDateTime initialDateEvent;
-    private LocalDateTime finalDateEvent;
+    private String startInscription;
+    private String endInscription;
+    private String initialDateEvent;
+    private String finalDateEvent;
     @URL
     private String eventBannerUrl;
 
     public EventEntity toEntity() {
-        return EventEntity.builder()
-                .title(title)
-                .description(description)
-                .eventUrl(eventUrl)
-                .startInscription(startInscription)
-                .endInscription(endInscription)
-                .initialDateEvent(initialDateEvent)
-                .finalDateEvent(finalDateEvent)
-                .eventBannerUrl(eventBannerUrl)
-                .build();
+        EventEntity eventEntity = new EventEntity();
+        eventEntity.setTitle(title);
+        eventEntity.setDescription(description);
+        eventEntity.setEventUrl(eventUrl);
+        eventEntity.setStartInscription(startInscription);
+        eventEntity.setEndInscription(endInscription);
+        eventEntity.setInitialDateEvent(initialDateEvent);
+        eventEntity.setFinalDateEvent(finalDateEvent);
+        eventEntity.setEventBannerUrl(eventBannerUrl);
+        return eventEntity;
     }
 }
