@@ -4,8 +4,10 @@ import com.victorpalha.aspop_spring.domain.member.dtos.CreateMemberRequestDTO;
 import com.victorpalha.aspop_spring.domain.member.exceptions.MemberWithSameCredentialsAlreadyExistsError;
 import com.victorpalha.aspop_spring.domain.member.useCases.CreateMemberRequestUseCase;
 import com.victorpalha.aspop_spring.http.mappers.ResponseMapper;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/member")
+@Validated
 public class CreateMemberRequestController {
 
     private final CreateMemberRequestUseCase createMemberRequestUseCase;
@@ -22,7 +25,7 @@ public class CreateMemberRequestController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Object> execute(@RequestBody CreateMemberRequestDTO createMemberRequestDTO) {
+    public ResponseEntity<Object> execute(@Valid @RequestBody CreateMemberRequestDTO createMemberRequestDTO) {
         try {
             createMemberRequestUseCase.execute(createMemberRequestDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(
