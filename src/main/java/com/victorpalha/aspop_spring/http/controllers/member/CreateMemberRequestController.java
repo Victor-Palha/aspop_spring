@@ -1,10 +1,10 @@
 package com.victorpalha.aspop_spring.http.controllers.member;
 
 import com.victorpalha.aspop_spring.domain.member.dtos.CreateMemberRequestDTO;
-import com.victorpalha.aspop_spring.domain.member.entities.MemberEntity;
 import com.victorpalha.aspop_spring.domain.member.exceptions.MemberWithSameCredentialsAlreadyExistsError;
 import com.victorpalha.aspop_spring.domain.member.useCases.CreateMemberRequestUseCase;
 import com.victorpalha.aspop_spring.http.mappers.ResponseMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/member")
 public class CreateMemberRequestController {
+
     private final CreateMemberRequestUseCase createMemberRequestUseCase;
 
     public CreateMemberRequestController(CreateMemberRequestUseCase createMemberRequestUseCase) {
@@ -22,20 +23,18 @@ public class CreateMemberRequestController {
 
     @PostMapping("/signup")
     public ResponseEntity<Object> execute(@RequestBody CreateMemberRequestDTO createMemberRequestDTO) {
-        try{
+        try {
             createMemberRequestUseCase.execute(createMemberRequestDTO);
-            return ResponseEntity.status(201).body(
-                    new ResponseMapper<>(201, "Requisição feita com sucesso!", null)
+            return ResponseEntity.status(HttpStatus.CREATED).body(
+                    new ResponseMapper<>(HttpStatus.CREATED.value(), "Requisição feita com sucesso!", null)
             );
-        }
-        catch (Exception e) {
-            if(e instanceof MemberWithSameCredentialsAlreadyExistsError){
-                return ResponseEntity.status(409).body(
-                        new ResponseMapper<>(201, e.getMessage(), null)
-                );
-            }
-            return ResponseEntity.status(500).body(
-                    new ResponseMapper<>(500, e.getMessage(), null)
+        } catch (MemberWithSameCredentialsAlreadyExistsError e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                    new ResponseMapper<>(HttpStatus.CONFLICT.value(), e.getMessage(), null)
+            );
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new ResponseMapper<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), null)
             );
         }
     }
