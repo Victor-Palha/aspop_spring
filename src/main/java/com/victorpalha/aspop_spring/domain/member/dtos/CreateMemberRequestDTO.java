@@ -24,7 +24,7 @@ public class CreateMemberRequestDTO {
     private String cpf;
     @Length(min = 6)
     private String rg;
-    private LocalDate birthDate;
+    private String birthDate;
     @Length(min = 1)
     private String motherName;
     private String fatherName;
@@ -37,7 +37,7 @@ public class CreateMemberRequestDTO {
     private String workLocation;
     @Length(min = 1)
     private String numberRegistration;
-    private LocalDate admissionDate;
+    private String admissionDate;
     @Length(min = 1)
     private String address;
     @Length(min = 1)
@@ -46,14 +46,6 @@ public class CreateMemberRequestDTO {
     private String cep;
     @Length(min = 9)
     private String phoneNumber;
-
-    public void setBirthDate(String birthDate) {
-        this.birthDate = LocalDate.parse(birthDate);
-    }
-
-    public void setAdmissionDate(String admissionDate) {
-        this.admissionDate = LocalDate.parse(admissionDate);
-    }
 
     public MemberEntity toEntity() {
         MemberEntity memberEntity = new MemberEntity();

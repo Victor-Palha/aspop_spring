@@ -47,7 +47,7 @@ public class ChangeMemberProfileUseCase {
                 changeMemberRequestDTO.getRg() != null ? changeMemberRequestDTO.getRg() : memberEntity.getRg()
         );
         memberEntity.setBirthDate(
-                changeMemberRequestDTO.getBirthDate() != null ? changeMemberRequestDTO.getBirthDate() : memberEntity.getBirthDate()
+                changeMemberRequestDTO.getBirthDate() != null ? changeMemberRequestDTO.getBirthDate() : memberEntity.getBirthDate().toString()
         );
         memberEntity.setMotherName(
                 changeMemberRequestDTO.getMotherName() != null ? changeMemberRequestDTO.getMotherName() : memberEntity.getMotherName()
@@ -65,7 +65,7 @@ public class ChangeMemberProfileUseCase {
                 changeMemberRequestDTO.getFormation() != null ? changeMemberRequestDTO.getFormation() : memberEntity.getFormation()
         );
         memberEntity.setAdmissionDate(
-                changeMemberRequestDTO.getAdmissionDate() != null ? changeMemberRequestDTO.getAdmissionDate() : memberEntity.getAdmissionDate()
+                changeMemberRequestDTO.getAdmissionDate() != null ? changeMemberRequestDTO.getAdmissionDate() : memberEntity.getAdmissionDate().toString()
         );
         memberEntity.setCep(
                 changeMemberRequestDTO.getCep() != null ? changeMemberRequestDTO.getCep() : memberEntity.getCep()

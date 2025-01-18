@@ -8,6 +8,7 @@ import com.victorpalha.aspop_spring.domain.member.useCases.ChangeMemberPasswordU
 import com.victorpalha.aspop_spring.http.controllers.dtos.ChangeMemberPasswordRequestDTO;
 import com.victorpalha.aspop_spring.http.mappers.ResponseMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -24,14 +25,15 @@ public class ChangeMemberPasswordController {
     }
 
     @PatchMapping("/password")
-    public ResponseEntity<Object> execute(HttpServletRequest req, @RequestBody ChangeMemberPasswordRequestDTO requestDTO) {
+    public ResponseEntity<Object> execute(HttpServletRequest req,
+                                          @Valid @RequestBody ChangeMemberPasswordRequestDTO dto) {
         final String memberId = req.getAttribute("member_id").toString();
         try{
             ChangeMemberPasswordDTO changeMemberPasswordDTO = ChangeMemberPasswordDTO
                     .builder()
                     .memberId(memberId)
-                    .oldPassword(requestDTO.getOldPassword())
-                    .newPassword(requestDTO.getNewPassword())
+                    .oldPassword(dto.getOldPassword())
+                    .newPassword(dto.getNewPassword())
                     .build();
             changeMemberPasswordUseCase.execute(changeMemberPasswordDTO);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(

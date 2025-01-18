@@ -54,4 +54,12 @@ public class MemberEntity {
     private String phoneNumber;
     private MemberRole role = MemberRole.MEMBER;
     private boolean isActive = false;
+
+    public void setBirthDate(String birthDate) {
+        this.birthDate = LocalDate.parse(birthDate);
+    }
+
+    public void setAdmissionDate(String admissionDate) {
+        this.admissionDate = LocalDate.parse(admissionDate);
+    }
 }
