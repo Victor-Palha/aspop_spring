@@ -1,5 +1,6 @@
 package com.victorpalha.aspop_spring.providers;
 import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -9,16 +10,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailProvider {
 
-    @Autowired
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
+    public EmailProvider(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
 
     public boolean sendEmail(String to, String pass, String who) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
-            helper.setFrom("ASSOCIAÇÃO DE PERITOS OFICIAIS DO PARÁ");
-            helper.setTo(to);
+            helper.setFrom(new InternetAddress("para.aspop@gmail.com"));
+            helper.setTo(new InternetAddress(to));
             helper.setSubject("Sua solicitação foi aprovada! Confira sua senha de acesso.");
 
             String htmlContent = String.format(
