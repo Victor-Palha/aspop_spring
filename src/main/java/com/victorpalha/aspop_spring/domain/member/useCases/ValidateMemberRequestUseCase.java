@@ -1,5 +1,6 @@
 package com.victorpalha.aspop_spring.domain.member.useCases;
 
+import com.victorpalha.aspop_spring.domain.member.dtos.ValidatedMemberResponseDTO;
 import com.victorpalha.aspop_spring.domain.member.entities.MemberEntity;
 import com.victorpalha.aspop_spring.domain.member.exceptions.MemberNotFoundError;
 import com.victorpalha.aspop_spring.domain.member.repository.MemberRepository;
@@ -25,7 +26,7 @@ public class ValidateMemberRequestUseCase {
         this.memberRepository = memberRepository;
     }
 
-    public MemberEntity execute(String memberId) {
+    public ValidatedMemberResponseDTO execute(String memberId) {
         Optional<MemberEntity> memberExists = memberRepository.findById(memberId);
         if (memberExists.isEmpty()) {
             throw new MemberNotFoundError();
@@ -35,7 +36,14 @@ public class ValidateMemberRequestUseCase {
         MemberEntity memberEntity = memberExists.get();
         memberEntity.setPassword(passwordHash);
         memberEntity.setActive(true);
-        return memberRepository.save(memberEntity);
+        MemberEntity memberCreated = memberRepository.save(memberEntity);
+
+        return ValidatedMemberResponseDTO
+                .builder()
+                .email(memberCreated.getEmail())
+                .name(memberCreated.getMemberName())
+                .password(randomPassword)
+                .build();
     }
 
     private String generatePassword() {

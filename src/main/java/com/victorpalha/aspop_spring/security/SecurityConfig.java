@@ -24,6 +24,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     // Public routes
                     auth.requestMatchers("/api/member/signup").permitAll();
+                    auth.requestMatchers("/api/member/signin").permitAll();
                     // Add auth process to all others
                     auth.anyRequest().authenticated();
                 })

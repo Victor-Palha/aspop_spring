@@ -2,6 +2,7 @@ package com.victorpalha.aspop_spring.domain.member.useCases;
 
 import com.victorpalha.aspop_spring.domain.member.constants.MaritalStatus;
 import com.victorpalha.aspop_spring.domain.member.dtos.CreateMemberRequestDTO;
+import com.victorpalha.aspop_spring.domain.member.dtos.ValidatedMemberResponseDTO;
 import com.victorpalha.aspop_spring.domain.member.entities.MemberEntity;
 import com.victorpalha.aspop_spring.domain.member.exceptions.MemberNotFoundError;
 import com.victorpalha.aspop_spring.domain.member.repository.MemberRepository;
@@ -57,13 +58,13 @@ public class ValidateMemberRequestUseCaseTest {
         when(memberRepository.save(any(MemberEntity.class))).thenReturn(memberEntity);
 
         // Execute use case
-        MemberEntity validatedMember = validateMemberRequestUseCase.execute(memberId);
+        ValidatedMemberResponseDTO validatedMember = validateMemberRequestUseCase.execute(memberId);
         // Assertions
         assert validatedMember != null;
         assert validatedMember.getPassword() != null;
-        assert validatedMember.getMemberId().equals(memberId);
-        assert validatedMember.getPassword().length() > 10;
-        assert validatedMember.isActive();
+        assert validatedMember.getPassword().length() == 10;
+        assert validatedMember.getEmail().equals(memberEntity.getEmail());
+        assert validatedMember.getName().equals(memberEntity.getMemberName());
     }
 
     @Test
