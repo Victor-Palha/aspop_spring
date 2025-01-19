@@ -119,4 +119,79 @@ public class ValidateMemberRequestControllerTest {
                 )
                 .andExpect(status().isForbidden());
     }
+
+    @Test
+    public void should_not_validate_member_request_if_member_is_not_found() throws Exception {
+        MemberEntity mockMember = MemberEntity.builder()
+                .memberName("John Doe")
+                .email("jv.palha@gmail.com")
+                .cpf("12345678900")
+                .rg("1234567")
+                .motherName("Jane Doe")
+                .fatherName("Jack Doe")
+                .naturalness("New York")
+                .maritalStatus(MaritalStatus.SOLTEIRO)
+                .formation("Bachelor's in Computer Science")
+                .workLocation("Main Office")
+                .numberRegistration("EMP123456")
+                .address("123 Main Street")
+                .addressNumber("456")
+                .cep("12345-678")
+                .phoneNumber("+1 123 456 7890")
+                .build();
+        mockMember.setBirthDate("2002-11-28");
+        mockMember.setAdmissionDate("2022-04-07");
+        mockMember.setRole(MemberRole.MEMBER);
+
+        mongoTemplate.save(mockMember);
+        String jwtToken = jwtProvider.generateMainToken(
+                "123123",
+                MemberRole.ADMIN,
+                Instant.now().plusSeconds(60)
+        );
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/member/validate/".concat("banana"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + jwtToken)
+                )
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void should_not_validate_member_request_if_member_is_already_validated() throws Exception {
+        MemberEntity mockMember = MemberEntity.builder()
+                .memberName("John Doe")
+                .email("jv.palha@gmail.com")
+                .cpf("12345678900")
+                .rg("1234567")
+                .motherName("Jane Doe")
+                .fatherName("Jack Doe")
+                .naturalness("New York")
+                .maritalStatus(MaritalStatus.SOLTEIRO)
+                .formation("Bachelor's in Computer Science")
+                .workLocation("Main Office")
+                .numberRegistration("EMP123456")
+                .address("123 Main Street")
+                .addressNumber("456")
+                .cep("12345-678")
+                .phoneNumber("+1 123 456 7890")
+                .build();
+        mockMember.setBirthDate("2002-11-28");
+        mockMember.setAdmissionDate("2022-04-07");
+        mockMember.setRole(MemberRole.MEMBER);
+        mockMember.setActive(true);
+
+        MemberEntity memberCreated = mongoTemplate.save(mockMember);
+        String jwtToken = jwtProvider.generateMainToken(
+                "123123",
+                MemberRole.ADMIN,
+                Instant.now().plusSeconds(60)
+        );
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/member/validate/".concat(memberCreated.getMemberId()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + jwtToken)
+                )
+                .andExpect(status().isConflict());
+    }
 }
