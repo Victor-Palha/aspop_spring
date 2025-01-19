@@ -23,6 +23,7 @@ public class GetMemberByIdController {
     public ResponseEntity<Object> execute(@PathVariable("id") String memberId) {
         try{
             MemberEntity memberEntity = getMemberByIdUseCase.execute(memberId);
+            System.out.println(memberEntity);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseMapper<>(HttpStatus.OK.value(), "Membro encontrado", memberEntity)
             );
