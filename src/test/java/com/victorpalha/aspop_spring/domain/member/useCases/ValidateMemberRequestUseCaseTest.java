@@ -4,6 +4,7 @@ import com.victorpalha.aspop_spring.domain.member.constants.MaritalStatus;
 import com.victorpalha.aspop_spring.domain.member.dtos.CreateMemberRequestDTO;
 import com.victorpalha.aspop_spring.domain.member.dtos.ValidatedMemberResponseDTO;
 import com.victorpalha.aspop_spring.domain.member.entities.MemberEntity;
+import com.victorpalha.aspop_spring.domain.member.exceptions.MemberAlreadyActiveError;
 import com.victorpalha.aspop_spring.domain.member.exceptions.MemberNotFoundError;
 import com.victorpalha.aspop_spring.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
@@ -79,6 +80,44 @@ public class ValidateMemberRequestUseCaseTest {
             validateMemberRequestUseCase.execute(memberId);
         }catch (Exception e) {
             assert e instanceof MemberNotFoundError;
+        }
+    }
+
+    @Test
+    public void should_not_validate_an_member_if_member_is_already_validated() {
+        // Mock data
+        String memberId = "12345";
+        CreateMemberRequestDTO createMemberRequestDTO = CreateMemberRequestDTO.builder()
+                .memberName("Jane Doe")
+                .email("janedoe@example.com")
+                .cpf("12345678901")
+                .rg("9876543")
+                .birthDate("2002-11-28")
+                .motherName("Mary Doe")
+                .fatherName("John Doe")
+                .naturalness("California")
+                .maritalStatus(MaritalStatus.CASADO)
+                .formation("Master's in Business Administration")
+                .workLocation("Branch Office")
+                .numberRegistration("EMP654321")
+                .admissionDate("2022-04-07")
+                .address("456 Elm Street")
+                .addressNumber("789")
+                .cep("54321-123")
+                .phoneNumber("+1 987 654 3210")
+                .build();
+        MemberEntity memberEntity = createMemberRequestDTO.toEntity();
+        memberEntity.setMemberId(memberId);
+        memberEntity.setActive(true);
+
+        // Mock behavior
+        when(memberRepository.findById(memberId)).thenReturn(Optional.of(memberEntity));
+
+        try{
+            validateMemberRequestUseCase.execute(memberId);
+        }
+        catch (Exception e) {
+            assert e instanceof MemberAlreadyActiveError;
         }
     }
 }

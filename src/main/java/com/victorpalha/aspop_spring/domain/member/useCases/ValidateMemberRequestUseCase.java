@@ -2,6 +2,8 @@ package com.victorpalha.aspop_spring.domain.member.useCases;
 
 import com.victorpalha.aspop_spring.domain.member.dtos.ValidatedMemberResponseDTO;
 import com.victorpalha.aspop_spring.domain.member.entities.MemberEntity;
+import com.victorpalha.aspop_spring.domain.member.exceptions.MemberAlreadyActiveError;
+import com.victorpalha.aspop_spring.domain.member.exceptions.MemberIsNotActiveError;
 import com.victorpalha.aspop_spring.domain.member.exceptions.MemberNotFoundError;
 import com.victorpalha.aspop_spring.domain.member.repository.MemberRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,6 +32,9 @@ public class ValidateMemberRequestUseCase {
         Optional<MemberEntity> memberExists = memberRepository.findById(memberId);
         if (memberExists.isEmpty()) {
             throw new MemberNotFoundError();
+        }
+        if(memberExists.get().isActive()){
+            throw new MemberAlreadyActiveError();
         }
         String randomPassword = this.generatePassword();
         String passwordHash = new BCryptPasswordEncoder().encode(randomPassword);
