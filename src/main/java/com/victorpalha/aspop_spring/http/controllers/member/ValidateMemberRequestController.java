@@ -1,6 +1,7 @@
 package com.victorpalha.aspop_spring.http.controllers.member;
 
 import com.victorpalha.aspop_spring.domain.member.dtos.ValidatedMemberResponseDTO;
+import com.victorpalha.aspop_spring.domain.member.exceptions.MemberAlreadyActiveError;
 import com.victorpalha.aspop_spring.domain.member.exceptions.MemberNotFoundError;
 import com.victorpalha.aspop_spring.domain.member.useCases.ValidateMemberRequestUseCase;
 import com.victorpalha.aspop_spring.http.mappers.ResponseMapper;
@@ -33,7 +34,6 @@ public class ValidateMemberRequestController {
                     response.getPassword(),
                     response.getName()
             );
-            System.out.println(response);
 
             if (!wasEmailSend) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(
@@ -44,11 +44,17 @@ public class ValidateMemberRequestController {
                     new ResponseMapper<>(HttpStatus.OK.value(), "Membro validado com sucesso!", null)
             );
         }
+        catch (MemberAlreadyActiveError e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                    new ResponseMapper<>(HttpStatus.CONFLICT.value(), e.getMessage(), null)
+            );
+        }
         catch (MemberNotFoundError e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseMapper<>(HttpStatus.NOT_FOUND.value(), e.getMessage(), null)
             );
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new ResponseMapper<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), null)
             );
