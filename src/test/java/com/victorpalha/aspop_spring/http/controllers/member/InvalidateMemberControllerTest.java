@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @Testcontainers
-public class ValidateMemberRequestControllerTest {
+public class InvalidateMemberControllerTest {
     @Container
     static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest");
 
@@ -45,119 +45,7 @@ public class ValidateMemberRequestControllerTest {
     private JWTProvider jwtProvider;
 
     @Test
-    public void should_validate_member_request() throws Exception {
-        MemberEntity mockMember = MemberEntity.builder()
-                .memberName("John Doe")
-                .email("jv.palha@gmail.com")
-                .cpf("12345678900")
-                .rg("1234567")
-                .motherName("Jane Doe")
-                .fatherName("Jack Doe")
-                .naturalness("New York")
-                .maritalStatus(MaritalStatus.SOLTEIRO)
-                .formation("Bachelor's in Computer Science")
-                .workLocation("Main Office")
-                .numberRegistration("EMP123456")
-                .address("123 Main Street")
-                .addressNumber("456")
-                .cep("12345-678")
-                .phoneNumber("+1 123 456 7890")
-                .build();
-        mockMember.setBirthDate("2002-11-28");
-        mockMember.setAdmissionDate("2022-04-07");
-        mockMember.setRole(MemberRole.MEMBER);
-
-        MemberEntity memberMock = mongoTemplate.save(mockMember);
-        String jwtToken = jwtProvider.generateMainToken(
-                "123123",
-                MemberRole.ADMIN,
-                Instant.now().plusSeconds(60)
-        );
-
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/member/validate/".concat(memberMock.getMemberId()))
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + jwtToken)
-        )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Membro validado com sucesso!"));
-    }
-
-    @Test
-    public void should_not_validate_member_request_if_an_not_admin_validate() throws Exception {
-        MemberEntity mockMember = MemberEntity.builder()
-                .memberName("John Doe")
-                .email("jv.palha@gmail.com")
-                .cpf("12345678900")
-                .rg("1234567")
-                .motherName("Jane Doe")
-                .fatherName("Jack Doe")
-                .naturalness("New York")
-                .maritalStatus(MaritalStatus.SOLTEIRO)
-                .formation("Bachelor's in Computer Science")
-                .workLocation("Main Office")
-                .numberRegistration("EMP123456")
-                .address("123 Main Street")
-                .addressNumber("456")
-                .cep("12345-678")
-                .phoneNumber("+1 123 456 7890")
-                .build();
-        mockMember.setBirthDate("2002-11-28");
-        mockMember.setAdmissionDate("2022-04-07");
-        mockMember.setRole(MemberRole.MEMBER);
-
-        MemberEntity memberMock = mongoTemplate.save(mockMember);
-        String jwtToken = jwtProvider.generateMainToken(
-                "123123",
-                MemberRole.MEMBER,
-                Instant.now().plusSeconds(60)
-        );
-
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/member/validate/".concat(memberMock.getMemberId()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + jwtToken)
-                )
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
-    public void should_not_validate_member_request_if_member_is_not_found() throws Exception {
-        MemberEntity mockMember = MemberEntity.builder()
-                .memberName("John Doe")
-                .email("jv.palha@gmail.com")
-                .cpf("12345678900")
-                .rg("1234567")
-                .motherName("Jane Doe")
-                .fatherName("Jack Doe")
-                .naturalness("New York")
-                .maritalStatus(MaritalStatus.SOLTEIRO)
-                .formation("Bachelor's in Computer Science")
-                .workLocation("Main Office")
-                .numberRegistration("EMP123456")
-                .address("123 Main Street")
-                .addressNumber("456")
-                .cep("12345-678")
-                .phoneNumber("+1 123 456 7890")
-                .build();
-        mockMember.setBirthDate("2002-11-28");
-        mockMember.setAdmissionDate("2022-04-07");
-        mockMember.setRole(MemberRole.MEMBER);
-
-        mongoTemplate.save(mockMember);
-        String jwtToken = jwtProvider.generateMainToken(
-                "123123",
-                MemberRole.ADMIN,
-                Instant.now().plusSeconds(60)
-        );
-
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/member/validate/".concat("banana"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + jwtToken)
-                )
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    public void should_not_validate_member_request_if_member_is_already_validated() throws Exception {
+    public void should_invalidate_member() throws Exception {
         MemberEntity mockMember = MemberEntity.builder()
                 .memberName("John Doe")
                 .email("jv.palha@gmail.com")
@@ -180,17 +68,75 @@ public class ValidateMemberRequestControllerTest {
         mockMember.setRole(MemberRole.MEMBER);
         mockMember.setActive(true);
 
-        MemberEntity memberCreated = mongoTemplate.save(mockMember);
+        MemberEntity memberMock = mongoTemplate.save(mockMember);
         String jwtToken = jwtProvider.generateMainToken(
                 "123123",
                 MemberRole.ADMIN,
                 Instant.now().plusSeconds(60)
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/member/validate/".concat(memberCreated.getMemberId()))
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/member/invalidate/".concat(memberMock.getMemberId()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwtToken)
                 )
-                .andExpect(status().isConflict());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("Membro foi invalidado com sucesso!"));
     }
+
+    @Test
+    public void should_not_invalidate_member_if_is_already_inactive() throws Exception {
+        MemberEntity mockMember = MemberEntity.builder()
+                .memberName("John Doe")
+                .email("jv.palha@gmail.com")
+                .cpf("12345678900")
+                .rg("1234567")
+                .motherName("Jane Doe")
+                .fatherName("Jack Doe")
+                .naturalness("New York")
+                .maritalStatus(MaritalStatus.SOLTEIRO)
+                .formation("Bachelor's in Computer Science")
+                .workLocation("Main Office")
+                .numberRegistration("EMP123456")
+                .address("123 Main Street")
+                .addressNumber("456")
+                .cep("12345-678")
+                .phoneNumber("+1 123 456 7890")
+                .build();
+        mockMember.setBirthDate("2002-11-28");
+        mockMember.setAdmissionDate("2022-04-07");
+        mockMember.setRole(MemberRole.MEMBER);
+        mockMember.setActive(false);
+
+        MemberEntity memberMock = mongoTemplate.save(mockMember);
+        String jwtToken = jwtProvider.generateMainToken(
+                "123123",
+                MemberRole.ADMIN,
+                Instant.now().plusSeconds(60)
+        );
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/member/invalidate/".concat(memberMock.getMemberId()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + jwtToken)
+                )
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.message").value("Membro não está ativo."));
+    }
+
+    @Test
+    public void should_not_invalidate_member_if_doesnt_exists() throws Exception {
+
+        String jwtToken = jwtProvider.generateMainToken(
+                "123123",
+                MemberRole.ADMIN,
+                Instant.now().plusSeconds(60)
+        );
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/member/invalidate/".concat("banana"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + jwtToken)
+                )
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Membro não encontrado"));
+    }
+
 }
