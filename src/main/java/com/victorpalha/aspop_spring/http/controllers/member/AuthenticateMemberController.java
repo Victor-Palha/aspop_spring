@@ -44,7 +44,7 @@ public class AuthenticateMemberController {
             Map<String, String> response = new HashMap<>();
             response.put("token", jwtToken);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseMapper<>(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), response)
+                    new ResponseMapper<>(HttpStatus.OK.value(), "Autenticado com sucesso", response)
             );
         }
         catch (InvalidCredentialsError e){
