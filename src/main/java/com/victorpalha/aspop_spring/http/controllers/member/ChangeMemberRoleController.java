@@ -1,5 +1,6 @@
 package com.victorpalha.aspop_spring.http.controllers.member;
 
+import com.victorpalha.aspop_spring.domain.member.exceptions.MemberIsNotActiveError;
 import com.victorpalha.aspop_spring.domain.member.exceptions.MemberNotFoundError;
 import com.victorpalha.aspop_spring.domain.member.useCases.ChangeMemberRoleUseCase;
 import com.victorpalha.aspop_spring.http.mappers.ResponseMapper;
@@ -31,6 +32,11 @@ public class ChangeMemberRoleController {
         catch (MemberNotFoundError e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseMapper<>(HttpStatus.NOT_FOUND.value(), e.getMessage(), null)
+            );
+        }
+        catch (MemberIsNotActiveError e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                    new ResponseMapper<>(HttpStatus.CONFLICT.value(), e.getMessage(), null)
             );
         }
         catch (Exception e){
